@@ -1,0 +1,151 @@
+/// MODEL 4: Recessive mutations (h=0), without gene-flow non-Roma to Roma
+/// RESCALING: to speed up simulations
+///  Ne and gen. time / 10
+///  Recomb. rate, mut. rate, mig. rate and sel. coefficient ×10
+
+initialize() {
+        initializeMutationRate(1.36e-7);
+
+        initializeMutationType("m1", 0, "f", 0.0); // neutral
+        initializeMutationType("m2", 0, "g", -0.25, 0.18 ); // del (gamma with mean Es 0.025, shape 0.18: Roma)
+        
+        // CHROMOSOME ORGANIZATION (p.119 manual). Exon(g1,g2), intron, non-coding
+        initializeGenomicElementType("g1", c(m2), 1.0);  // pos 1/2 del
+        initializeGenomicElementType("g2", c(m1), 1.0);  // pos 3 neutral
+        initializeGenomicElementType("g3", c(m1), 1.0); // intron
+        initializeGenomicElementType("g4", c(m1), 1.0); // non-coding
+
+        // Generate 1000 genes (with 8 exons of 100bp separated by introns of 50kb) with intergenic 50kb  along a chromosome (85,800,000 bases) for 20 chromosomes
+        base = 0;
+        n_chr=20;
+        while (base < (85792000*n_chr)-1) {
+            // make a non-coding region
+            nc_length = 50000;
+            initializeGenomicElement(g4, base, base + nc_length - 1);
+            base = base + nc_length;
+            
+            // make first exon
+            codon=1;
+            while (codon < 33+1) {
+                initializeGenomicElement(g1, base, base + 2 - 1); // 1st and 2nd pos
+                base=base+2;
+                initializeGenomicElement(g2, base, base + 1 - 1); // 3rd pos
+                codon=codon+1;
+                base=base+1;
+            }
+            
+            // make 7 intron-exon pairs
+            pair = 1;
+            while (pair < 8) {
+              // Make 1 intron  
+              in_length = 5000;
+              initializeGenomicElement(g3, base, base + in_length - 1);
+              base = base + in_length;
+              // Make 1 exon (with 33 codons)
+              codon=1;
+              while (codon < 33+1) {
+                initializeGenomicElement(g1, base, base + 2 - 1); // 1st and 2nd pos
+                base=base+2;
+                initializeGenomicElement(g2, base, base + 1 - 1); // 3rd pos
+                codon=codon+1;
+                base=base+1;
+              }
+              pair = pair + 1;
+            }  
+        }
+        
+        // recombination rates to create 20 unlinked chrs
+        rates = c(1e-7, rep(c(0.5,1e-8), 19));
+        chr_len=85800000;
+        ends=c(chr_len-1);
+        n=1;
+        while (n < 20) {
+            start_r=chr_len*n;
+            end_r=start_r+(chr_len-1);
+            ends = c(ends, start_r, end_r);
+            n=n+1;
+        }
+        initializeRecombinationRate(rates, ends);
+}
+
+// DEMOGRAPHIC MODEL: AFR (p1), EUR (p2), EASIA (p3), MEAST (p4), INDIA (p5), ROMABulgaria (p6), ROMASpain (p7)
+// Create the ancestral African population
+1 { sim.addSubpop("p1", 804); }
+
+// After 6N burn-in (6*8041=48246), split non-Africans from Africans 
+6432 { 
+    sim.addSubpopSplit("p2", 297, p1);
+}
+
+// Split p2 into European and Asian subpopulations. This occurs 1185 generations ago
+6539 {
+    sim.addSubpopSplit("p3", 242, p2);
+}
+// Split p3 into Asian and MiddleEast subpopulations. This occurs 1110 generations ago
+6547 {
+    sim.addSubpopSplit("p4", 198, p3);
+}
+// Split p3 into EastAsian and Indian subpopulations. This occurs 1103 generations ago
+6548 {
+    sim.addSubpopSplit("p5", 327, p3);
+    // Set migration rates for the rest of the simulation: CEU (p2)--> India (p5); CHB (p3) --> India (p5)
+    p5.setMigrationRates(p2, 0.002);
+    p5.setMigrationRates(p3, 0.005);
+}
+// First sample segregating mutations 20 generations before the Romani split
+6650 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+6651 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+
+// Split p5 into Indian and Romani subpopulations. This occurs 62 generations ago
+6652 {
+    sim.addSubpopSplit("p6", 154, p5);
+}
+6652 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+
+// Set migration rate from MEast (p4) --> Romani (p6) during 13 generations
+6653:6654 {
+    //p6.setMigrationRates(p4, 0.22);
+}
+
+6653 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+
+6654 {
+    //p6.setMigrationRates(p4, 0);
+}
+
+6654 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+
+// Split p6 into BulgarianRoma and SpainRoma subpopulations. This occurs 38 generations ago. Reduce size of BulgarianRoma 
+6655 {
+    sim.addSubpopSplit("p7", 71, p6);
+    p6.setSubpopulationSize(1011);
+}    
+6655 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+}
+// Set migration rates for the last 38 generations: CEU (p2)--> BulgarianRoma (p6); CEU (p2) --> SpainRoma (p7)
+6655:6659 {    
+    //p6.setMigrationRates(p2, 0.5);
+    //p7.setMigrationRates(p2, 0.4);
+    if(sim.generation == 6656){sim.outputMutations(sim.mutationsOfType(m2));}
+    if(sim.generation == 6657){sim.outputMutations(sim.mutationsOfType(m2));}
+    if(sim.generation == 6658){sim.outputMutations(sim.mutationsOfType(m2));}
+}
+
+// Generation 50510 is the present.  Output and terminate.
+6659 late() {
+    sim.outputMutations(sim.mutationsOfType(m2));
+    sim.outputFull("slim_model4_outputFull.txt");
+}
+
+
