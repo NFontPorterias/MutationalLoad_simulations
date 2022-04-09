@@ -56,11 +56,16 @@ Then, run:
 ```bash
 sh Parse_output_SLiM.sh
 ```
-Briefly, this script keeps the simulation results for a number of generations and saves them in separate files. Remember! If you rescaled the simulations by 10, here generations will be rescaled by 10 too. Particurlaly, in our case, we recorded the results for the following generations: 6650,6652,6654,6656, 6659. ()
+Briefly, this script keeps the simulation results for a number of generations and saves them in separate files. Remember! If you rescaled the simulations by 10, here generations will be rescaled by 10 too. Particurlaly, in our case, we recorded the results for the following generations ago (ga): 82,62,42,22,0. We grep results for generations: 6650, 6652, 6654, 6656, and 6659 (*e.g.*, "82 ga" corresponds to the "rescaled" generation 6650 in our simulations).
 
-### Step3. Calculate mutation load and plot the results
+### Step3. Calculate load and plot the mutational load temporal trajectories
+*R version*: 4.1.1. 
+*Required R package*: ggplot2 3.3.5
 
+Run the following to calculate mutational load values for each model at each sampled generation and plot the results:
 
 ```bash
 Rscript plot_TrajectoryLoad.R
 ```
+
+Briefly, this scripts first calculates the frequency of each deleterious mutations in each model and generation. Then, estimates mutational load per mutation and lastly calculates mutational load for the population from the load of each mutation. See ... for more information.
