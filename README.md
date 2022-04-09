@@ -1,5 +1,5 @@
 # Mutational Load simulations
-Helper scripts to perform SLIM simulations and mutational load analyses (for additive and recessive mutations) used in [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070). This repo is not under active development, consider code as it is and check the software versions specified below.
+Helper scripts to perform SLIM simulations and mutational load analyses (for additive and recessive mutations) and to create the plot in [Figure3B](https://academic.oup.com/view-large/figure/266883350/msab070f3.tif) from [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070). This repo is not under active development, consider code as it is and check the software versions specified below.
 
 ## Description
 Overall description: The scripts in this repo are used to perform forward simulations with SLIM based on the demographic model inferred for Spanish Romani (published in Mendizabal et al 2012) and calculate mutational load changes through time on the simulated populations. 
@@ -13,7 +13,7 @@ If you use these tools, please cite:
 ## Pipeline
 
 ### Step1. Forward simulations with SLiM
-*SLiM version*:3.2. 
+*SLiM version*: 3.2. 
 
 Download SLiM ([documentation](https://messerlab.org/slim/), [Github repository](https://github.com/MesserLab/SLiM), and [online workshop](http://benhaller.com/workshops/workshops.html) )
 
@@ -43,19 +43,34 @@ slim Model_4.txt
 ```
 
 Briefly, each model has a:
-- Burn-in phase of 8N generations
+- Burn-in phase: 8N generations
 - Mutation rate: 1.36 × 10−8 per base position per generation
 - Recombination rate:  10−8 per base per generation
 - Genome structure (see figure below)
 ![](Genome_structure.png)
-- Distributin of Fitness Effects (DFE) for deleterious mutations calculated with dadi/fitdadi. 
-"To reduce the computational time of the simulations, we performed a rescaling of the following parameters: population size and generation time were decreased by ten, whereas mutation and recombination rate, selection coefficient, and migration rate were multiplied by ten to keep population-genetic parameters constant". See a complete description in [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070) and [Lopez, M. et al. *Nat Ecol Evol*, 2018](https://doi.org/10.1038/s41559-018-0496-4).
+- Distributin of Fitness Effects (DFE) for deleterious mutations calculated with ∂a∂i/Fit∂a∂i (see [Fit∂a∂i github](https://github.com/LohmuellerLab/fitdadi)). 
+
+"To reduce the computational time of the simulations, we performed a rescaling of the following parameters: population size and generation time were decreased by ten, whereas mutation and recombination rate, selection coefficient, and migration rate were multiplied by ten to keep population-genetic parameters constant" ([Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070)). 
+
+See a complete description in [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070) and [Lopez, M. et al. *Nat Ecol Evol*, 2018](https://doi.org/10.1038/s41559-018-0496-4).
 
 ### Step2. Parse simulations output
-Parse SLiM output to get the simulations results recorded at the different generations (for this study we recorded the results for the following generations: 6650, 6651, 6652, 6653, 6654, 6655, 6656, 6657, 6658, 6659).
+Parse SLiM output to get the simulations results recorded at the different generations.
+For each model, creater a folder and move SLiM output there, *e.g.*:
+```bash
+mkdir Model1
+mv Model_1.out
+```
+Then, run: 
 
 ```bash
-slim sh Parse_output_SLiM.sh
+sh Parse_output_SLiM.sh
 ```
+Briefly, this script keeps the simulation results for a number of generations and saves them in separate files. Remember! If you rescaled the simulations by 10, here generations will be rescaled by 10 too. Particurlaly, in our case, we recorded the results for the following generations: 6650,6652,6654,6656, 6659. ()
 
 ### Step3. Calculate mutation load and plot the results
+
+
+```bash
+Rscript plot_TrajectoryLoad.R
+```
