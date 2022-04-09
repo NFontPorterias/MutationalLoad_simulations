@@ -68,4 +68,4 @@ Run the following to calculate mutational load values for each model at each sam
 Rscript plot_TrajectoryLoad.R
 ```
 
-Briefly, this scripts first calculates the frequency of each deleterious mutations in each model and generation. Then, estimates mutational load per mutation and lastly calculates mutational load for the population from the load of each mutation. See ... for more information.
+Briefly, this scripts first calculates the frequency of each deleterious mutations in each model and generation. Then, estimates mutational load per mutation and lastly calculates mutational load for the population from the load of each mutation. See [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070) and [Lopez, M. et al. *Nat Ecol Evol*, 2018](https://doi.org/10.1038/s41559-018-0496-4) for more information.
