@@ -1,5 +1,5 @@
 # Mutational Load simulations
-Helper scripts to perform SLIM simulations, mutational load analyses, and to create the plot in [Figure3B](https://academic.oup.com/view-large/figure/266883350/msab070f3.tif) from [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070). This repo is not under active development, consider code as it is and check the software versions specified below.
+Helper scripts to perform SLIM simulations, mutational load analyses, and to create the plot in [Figure3B](https://academic.oup.com/view-large/figure/266883350/msab070f3.tif) from [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070). These scripts can also be found in this [Figshare link](https://figshare.com/articles/software/Whole-exomes_Roma/13848506) with a CC BY 4.0 licence. This repo is not under active development, consider code as it is and check the software versions specified below.
 
 ## Description
 **Overall description:** The scripts in this repo are used to perform forward simulations with SLIM based on the demographic model inferred for Spanish Romani (published in Mendizabal et al 2012) and calculate mutational load changes through time on the simulated populations. 
