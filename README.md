@@ -65,7 +65,7 @@ sh Parse_output_SLiM.sh
 *R version*: 4.1.1. 
 *Required R package*: ggplot2 3.3.5
 
-This scripts first calculates the frequency of each deleterious mutation in each model and generation. Then, estimates mutational load per mutation and lastly calculates mutational load for the population from the load of each mutation. See [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070) and [Lopez, M. et al. *Nat Ecol Evol*, 2018](https://doi.org/10.1038/s41559-018-0496-4) for more information.
+This script first calculates the frequency of each deleterious mutation in each model and generation. Then, estimates mutational load per mutation and lastly calculates mutational load for the population from the load of each mutation. See [Font-Porterias, N. et al. *MBE*, 2021](https://doi.org/10.1093/molbev/msab070) and [Lopez, M. et al. *Nat Ecol Evol*, 2018](https://doi.org/10.1038/s41559-018-0496-4) for more information.
 
 
 Run the following to calculate mutational load values for each model at each sampled generation and plot the results:
